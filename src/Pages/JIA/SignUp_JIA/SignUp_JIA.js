@@ -6,7 +6,7 @@ class SignUp_JIA extends React.Component{
     constructor() {
         super();
         this.state ={
-        SignUPNum : "",
+        SignUpEmail : "",
         SignUpName : "",
         SignUpNick : "",
         SignUpPw : "",
@@ -14,26 +14,75 @@ class SignUp_JIA extends React.Component{
     }
 }
 
-    inputValueId = (event) => {
+    inputValueEmail = (event) => {
         this.setState({
-            loginId:event.target.value
+            SignUpEmail:event.target.value
+        })
+    }
+
+    inputValueName = (event) => {
+        this.setState({
+            SignUpName:event.target.value
+        })
+    }
+
+    inputValueNick = (event) => {
+        this.setState({
+            SignUpNick:event.target.value
         })
     }
 
     inputValuePw = (event) => {
         this.setState({
-            loginPw:event.target.value
+            SignUpPw:event.target.value
         })
     }
 
-
     buttonColorChange = () => {
-        if (this.state.loginId.includes('@') && this.state.loginPw.length >= 5 ){
-            this.setState({btnColor : false});
+        console.log(this.state.SignUpEmail)
+        if (this.state.SignUpEmail.includes('@') && this.state.SignUpPw.length >= 5 )
+        {this.setState({btnColor : false});
         }else {
             this.setState({ btnColor : true});
         }
     }
+
+    signUpHandler=()=>{
+        console.log(this.state.SignUpEmail);
+        console.log(this.state.SignUpName);
+        console.log(this.state.SignUpNick);
+        console.log(this.state.SignUpPw);
+
+ 
+            fetch("http://10.58.4.172:8000/account/signup", {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                'email' : this.state.SignUpEmail,
+                'name' : this.state.SignUpName,
+                'nick_name' : this.state.SignUpNick,
+                'password' : this.state.SignUpPw
+              })
+            })
+              .then(response => response.json())
+              .then(response =>  
+                {if (response.message=="SUCCESS") {
+                    alert("회원가입에 성공하였습니다 로그인을 해주세요");
+                    this.props.history.push("/");
+                } else {
+                  alert("중복된 회원정보가 있습니다.");
+                  this.props.history.push("/signup_jia");
+                }
+                }
+                )
+            //  
+              };
+          
+            
+
+    
        
     render(){
         return(
@@ -47,15 +96,14 @@ class SignUp_JIA extends React.Component{
                     <div className = 'mid-line-02'></div>
                 </div>
                 <div className = "input_wrap">
-                    <input type="text" className= "input-text-num" placeholder="휴대폰 번호 또는 이메일 주소"/>
-                    <input type="text" className="input-text-name" placeholder="성명"/>
-                    <input type="text" className="input-text-nick" placeholder="사용자 이름"/>
-                    <input type="password" className="input-text-pw" placeholder="비밀번호"/>
+                    <input onChange={this.inputValueEmail} onKeyUp={this.buttonColorChange} type="text" className= "input-text-num" placeholder="휴대폰 번호 또는 이메일 주소"/>
+                    <input onChange={this.inputValueName} type="text" className="input-text-name" placeholder="성명"/>
+                    <input onChange={this.inputValueNick} type="text" className="input-text-nick" placeholder="사용자 이름"/>
+                    <input onChange={this.inputValuePw}  onKeyUp={this.buttonColorChange}  type="password" className="input-text-pw" placeholder="비밀번호"/>
                 </div>
-                <button onClick={this.signUpHandler}className ='btn-signup'>가입</button>
-                {/* <button className ={`buttonColor ${this.state.btnColor ? ' ' : 'buttonChangeColor'}`}>로그인</button> */}
-
-                <div className = "addText">가입하면 instagram의 <strong>약관, 데이터 정책</strong> 및 <strong>쿠키 정책</strong>에 동의하게 됩니다. </div>
+                <button onClick={this.signUpHandler} 
+                 className={this.state.btnColor ? 'btn-signup' : 'btn-signup-color-change'}> 가입</button>
+                              <div className = "addText">가입하면 instagram의 <strong>약관, 데이터 정책</strong> 및 <strong>쿠키 정책</strong>에 동의하게 됩니다. </div>
             </div>
         )
     }

@@ -29,21 +29,25 @@ class Login_JIA extends React.Component {
     console.log(this.state.loginById);
     console.log(this.state.loginBy);
 
-    fetch("http://10.58.4.172:8000/account/singin", {
+    fetch("http://10.58.4.172:8000/account/signin", {
       method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+    },
       body: JSON.stringify({
         'email': this.state.loginById,
         'password': this.state.loginByPw,
-      }),
+      })
     })
-      .then((response) => response.json())
-      .then((response) => {
+      .then(response => response.json())
+      .then(response => {
         if (response.token) {
           console.log(response);
           localStorage.setItem("wtw-token", response.token);
-          this.props.history.push("/main");
+          this.props.history.push("/main_jia");
         } else if (!response.token) {
           alert("올바른 회원이 아닙니다");
+          this.props.history.push("/signup_jia");
         }
       });
   };
