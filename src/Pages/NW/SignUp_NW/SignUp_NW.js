@@ -35,6 +35,68 @@ class SignUp_NW extends React.Component{
 //         }
 //     }
        
+    
+
+    state = {
+        loginByEmail: "",
+        loginByName: "",
+        loginByNick: "",
+        loginByPw: "",
+        btState: true,
+    };
+
+    typeEmail = (e) => {
+        this.setStates({
+            loginByEmail: e.target.value,
+        });
+    };
+
+    typeName = (e) => {
+        this.setStates({
+            loginByName: e.target.value,
+        });
+    };
+
+    typeNick = (e) => {
+        this.setStates({
+            loginByNick: e.target.value,
+        });
+    };
+
+    typePw = (e) => {
+        this.setStates({
+            loginByPw: e.target.value,
+        });
+    };
+
+    clickEvent = () => {
+        console.log(this.state.loginByEmail);
+        console.log(this.state.loginByName);
+        console.log(this.state.loginByNick);
+        console.log(this.state.loginByPw);
+    
+        fetch("http://10.58.4.172:8000/account/singin", {
+            method: "POST",
+            body: JSON.stringify({
+                'Email': this.state.loginByEmail,
+                'Name' : this.state.loginByName,
+                'Nick' : this.state.loginByNick,
+                'Password' : this.state.loginByPw,
+            }),
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.token) {
+                    console.log(response);
+                    localStorage.setItem("wtw-token", response.token);
+                    this.props.history.push("/signup_nw");
+                } else if (!response.token) {
+                    alert("올바른 회원이 아닙니다");
+                }
+            });
+        };
+          
+
     render(){
         return(
             <div className = "SignUp">
@@ -47,12 +109,34 @@ class SignUp_NW extends React.Component{
                     <div className = 'mid-line-02'></div>
                 </div>
                 <div className = "input_wrap">
-                    <input type="text" className= "input-text-num" placeholder="휴대폰 번호 또는 이메일 주소"/>
-                    <input type="text" className="input-text-name" placeholder="성명"/>
-                    <input type="text" className="input-text-nick" placeholder="사용자 이름"/>
-                    <input type="password" className="input-text-pw" placeholder="비밀번호"/>
+                    <input type="text" 
+                           onChange={this.typeEmail}
+                           className= "input-Email" 
+                           placeholder="휴대폰 번호 또는 이메일 주소"
+                    />
+                    <input type="text" 
+                           onChange={this.typeName}
+                           className="input-Name" 
+                           placeholder="성명"
+                    />
+                    <input type="text" 
+                           onChange={this.typeNick}
+                           className="input-Nick" 
+                           placeholder="사용자 이름"
+                    />
+                    <input type="password" 
+                           onChange={this.typePw}
+                           className="input-Password" 
+                           placeholder="비밀번호"
+                    />
                 </div>
-                <button className ='btn-signup'>가입</button>
+                <button 
+                    className ='btn-signup'
+                    onClick={this.clickEvent}
+                    type="sumit"
+                >
+                        가입
+                </button>
                 {/* <button className ={`buttonColor ${this.state.btnColor ? ' ' : 'buttonChangeColor'}`}>로그인</button> */}
 
                 <div className = "addText">가입하면 instagram의 <strong>약관, 데이터 정책</strong> 및 <strong>쿠키 정책</strong>에 동의하게 됩니다. </div>
