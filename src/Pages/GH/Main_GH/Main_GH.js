@@ -46,7 +46,7 @@ class Main_GH extends React.Component{
 
     render(){
         return(
-            <div className="Main">
+            <div className="Main_GH">
                 <nav>
                     <div className="nav">
                         <div className="nav-left-logo">
